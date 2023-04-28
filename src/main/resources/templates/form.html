@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        div {
+            margin-bottom: 12px;
+        }
+        input.error, select.error {
+            background-color: lightcoral;
+        }
+    </style>
+</head>
+<body>
+
+
+<form th:action="@{${action}}" method="post" th:object="${form}">
+<!--    <p th:text="|Entered first name: ${form.firstName}|"></p>-->
+
+    <div>
+        <label for="firstName">First name</label>
+        <input type="text" id="firstName" name="firstName" th:errorclass="error" th:field="*{firstName}"/>
+    </div>
+
+    <div>
+        <label for="lastName">Last name</label>
+        <input type="text" id="lastName" name="lastName" th:errorclass="error" th:field="*{lastName}"/>
+    </div>
+
+    <div>
+        <label for="type">Type</label>
+        <select id="type" name="type" th:field="*{type}" th:errorclass="error">
+            <option th:each="type : ${types}" th:value="${type.name()}" th:text="${type.name()}"></option>
+            <option th:value="INVALID_VALUE">INVALID VALUE</option>
+        </select>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

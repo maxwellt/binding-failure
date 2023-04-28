@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:if="${formSubmitted eq 'success'}">
+    <p>form submitted success</p>
+</th:block>
+
+<a th:href="@{/formClassJavaBean}">Submit form with Class (JavaBean compliant) as backing object</a><br/>
+<a th:href="@{/formClassWithoutSetters}">Submit form with Class (without setters, so not JavaBean compliant) as backing object</a><br/>
+<a th:href="@{/formRecord}">Submit form with Record as backing object</a><br/>
+</body>
+</html>
