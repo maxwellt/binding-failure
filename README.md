@@ -47,11 +47,45 @@ In the case of the Record form, the backing object itself seems to be set to NUL
 
 > org.springframework.expression.spel.SpelEvaluationException: EL1007E: Property or field 'firstName' cannot be found on null
 
+If you were to re-add the `form` to the `model` manually, everything would work fine, so change the `processRecordForm` from this:
+
+    @PostMapping("/formRecord")
+    public String processFormRecord(@Valid @ModelAttribute("form") FormRecord form, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("types", Type.values());
+            model.addAttribute("action", "/formRecord");
+            return "form";
+        }
+
+        redirectAttributes.addFlashAttribute("formSubmitted", "success");
+        return "redirect:/";
+    }
+
+To this:
+
+    @PostMapping("/formRecord")
+    public String processFormRecord(@Valid @ModelAttribute("form") FormRecord form, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("types", Type.values());
+            model.addAttribute("action", "/formRecord");
+            model.addAttribute("form", form);
+            return "form";
+        }
+
+        redirectAttributes.addFlashAttribute("formSubmitted", "success");
+        return "redirect:/";
+    }
+
+And it works as you would expect...
+
 Furthermore, if you were to remove the printing of the `firstName` value, i.e. the following line:
 
 `<p th:text="|Entered first name: ${form.firstName}|"></p>` in `form.html` and then run through the second scenario again, you'll get another (unexpected outcome). Namely, there is no longer an HTTP 500, but after the `typeMismatch` due to using an invalid enum value for `type`, the binding seems to have stopped completely, because the `lastName` field will **not** be marked as invalid...
 
-To summarize into question I'm left with: what's the difference in data binding between a non-JavaBean compliant Java class and a Java record? There clearly is a difference as I'm getting different behavior.
+To summarize into questions I'm left with: 
+
+1. What's the difference in data binding between a non-JavaBean compliant Java class and a Java record? There clearly is a difference as I'm getting different behavior.
+2. Why is the form not automatically being added again to the `model`, it's clearly marked as `@ModelAttribute`.
 
 
 

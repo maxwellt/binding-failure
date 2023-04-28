@@ -30,6 +30,7 @@ public class FormController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("types", Type.values());
             model.addAttribute("action", "/formRecord");
+            model.addAttribute("form", form);
             return "form";
         }
 
